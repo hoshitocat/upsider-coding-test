@@ -7,16 +7,16 @@ import (
 )
 
 type Config struct {
-	Port     string `env:"PORT" default:"8080"`
+	Port     string `env:"PORT" envDefault:"8080"`
 	Database DatabaseConfig
 }
 
 type DatabaseConfig struct {
-	Host     string `env:"DB_HOST" default:"localhost"`
-	Port     string `env:"DB_PORT" default:"3306"`
-	User     string `env:"DB_USER" default:"root"`
-	Password string `env:"DB_PASSWORD" default:""`
-	DBName   string `env:"DB_NAME" default:"invoice"`
+	Host     string `env:"DB_HOST" envDefault:"localhost"`
+	Port     string `env:"DB_PORT" envDefault:"3306"`
+	User     string `env:"DB_USER" envDefault:"root"`
+	Password string `env:"DB_PASSWORD" envDefault:""`
+	DBName   string `env:"DB_NAME" envDefault:"invoice"`
 }
 
 func NewConfig() (*Config, error) {

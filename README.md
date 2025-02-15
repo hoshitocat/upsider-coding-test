@@ -2,7 +2,7 @@
 
 [課題内容](https://github.com/upsidr/coding-test/blob/main/web-api-language-agnostic/README.ja.md)
 
-以下は課題内容のこぴー
+以下は課題内容のコピー
 
 # APIコーディングテストについて
 

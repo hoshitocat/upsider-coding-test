@@ -1,0 +1,25 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile
+    ports:
+      - "8080:8080"
+      - "2345:2345"
+    working_dir: /app
+    volumes:
+    - type: bind
+      source: .
+      target: /app
+    command: ["go", "tool", "air", "-c", "./cmd/invoiceapi/.air.toml"]
+  db:
+    image: mysql:8.4.3
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=invoice
+    ports:
+      - "3306:3306"
+    volumes:
+      - invoiceapi-db:/var/lib/mysql
+volumes:
+  invoiceapi-db:
