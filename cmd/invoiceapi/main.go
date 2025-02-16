@@ -41,6 +41,11 @@ func main() {
 	interactors := usecase.NewInteractors(repos)
 	handlers := adapter.NewHandlers(interactors)
 
+	// TODO: 認証基盤やLog基盤を導入する必要があります
+	//       認証用のミドルウェアを作成し、リクエストヘッダーから認証トークンを取得し、
+	//       トークンの検証を行い、認証が通ったユーザーのみがAPIを利用できるようにする必要があります
+	//       また、ログ基盤を導入し、APIのリクエストとレスポンスをログに残したり、OpenTelemetryに準拠したTraceIDやSpanIDの発行ができるような実装を導入したい
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /api/invoices", handlers.InvoiceHandler.CreateInvoice)
 	mux.HandleFunc("GET /api/invoices", handlers.InvoiceHandler.ListInvoices)
