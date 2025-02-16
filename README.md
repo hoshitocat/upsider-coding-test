@@ -135,3 +135,15 @@ VALUES
     ('01JM6BKQNY7F4ERZ8QR9W9XDD7', '01JM6BKQNPK2VTHS5EFYM9KLU4', 'みずほ銀行', '本店', '1234567890', '佐藤一郎'),
     ('01JM6BKQNZ8G5FSZ9RS0XAWE88', '01JM6BKQNQW4XVJU7GHZN2MNV6', '三菱UFJ銀行', '本店', '1234567890', '鈴木花子');
 ```
+
+## TODO
+
+- [ ] package構成についてDocument書く
+- [ ] テスト
+  - [ ] httptestでE2Eテスト
+- [ ] ロギング整備
+- [ ] 認証整備
+- [ ] GraphQLやgRPC導入でスキーマ駆動開発基盤整備
+- [ ] インフラ構成と構成管理(terraformなどでIaC化)
+- [ ] deploy
+- [ ] CI/CD整備
