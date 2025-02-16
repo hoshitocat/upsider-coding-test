@@ -43,10 +43,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /api/invoices", handlers.InvoiceHandler.CreateInvoice)
-	mux.HandleFunc("GET /api/invoices", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("請求書一覧が取得されました"))
-	})
+	mux.HandleFunc("GET /api/invoices", handlers.InvoiceHandler.ListInvoices)
 
 	server := &http.Server{
 		Addr:    ":" + cfg.Port,

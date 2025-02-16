@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/hoshitocat/upsider-coding-test/cmd/invoiceapi/internal/domain"
+	"github.com/hoshitocat/upsider-coding-test/internal/timex"
 )
 
 type InvoiceInteractor struct {
@@ -21,4 +22,12 @@ func (i *InvoiceInteractor) CreateInvoice(ctx context.Context, invoice *domain.I
 	}
 
 	return nil
+}
+
+func (i *InvoiceInteractor) ListInvoices(ctx context.Context, beginDate, endDate timex.Date) ([]*domain.Invoice, error) {
+	invoices, err := i.invoiceRepo.ListInvoices(ctx, beginDate, endDate)
+	if err != nil {
+		return nil, fmt.Errorf("failed to list invoices: %w", err)
+	}
+	return invoices, nil
 }

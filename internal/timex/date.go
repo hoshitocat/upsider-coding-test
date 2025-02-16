@@ -10,16 +10,16 @@ type Date struct {
 	t time.Time
 }
 
-func NewDateFromTime(t time.Time) *Date {
-	return &Date{t: t}
+func NewDateFromTime(t time.Time) Date {
+	return Date{t: t}
 }
 
-func NewDateFromString(s string) (*Date, error) {
+func NewDateFromString(s string) (Date, error) {
 	t, err := time.Parse(time.DateOnly, s)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse date: %w", err)
+		return Date{}, fmt.Errorf("failed to parse date: %w", err)
 	}
-	return &Date{t: t}, nil
+	return Date{t: t}, nil
 }
 
 func (d *Date) UnmarshalJSON(b []byte) error {
@@ -33,10 +33,14 @@ func (d *Date) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("(*Date) cannot unmarshal: failed to unmarshal string: %w", err)
 	}
 
-	*d = *date
+	*d = date
 	return nil
 }
 
-func (d *Date) String() string {
+func (d Date) String() string {
 	return d.t.Format(time.DateOnly)
+}
+
+func (d Date) Time() time.Time {
+	return d.t
 }
