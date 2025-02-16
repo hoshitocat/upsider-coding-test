@@ -40,7 +40,10 @@ func (h *invoiceHandler) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(invoice)
+	// TODO: エラーハンドリング
 }
 
 func (h *invoiceHandler) ListInvoices(w http.ResponseWriter, r *http.Request) {

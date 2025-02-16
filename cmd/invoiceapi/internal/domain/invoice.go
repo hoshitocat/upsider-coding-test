@@ -15,20 +15,20 @@ const (
 )
 
 type Invoice struct {
-	ID                string
-	CompanyID         string
-	BusinessPartnerID string
-	IssueDate         timex.Date
-	PaymentAmount     float64
-	FeeRate           float64
-	FeeAmount         float64
-	TaxRate           float64
-	TaxAmount         float64
-	TotalAmount       float64
-	DueDate           timex.Date
-	Status            string
-	CreatedAt         time.Time
-	UpdatedAt         time.Time
+	ID                string     `json:"id"`
+	CompanyID         string     `json:"company_id"`
+	BusinessPartnerID string     `json:"business_partner_id"`
+	IssueDate         timex.Date `json:"issue_date"`
+	PaymentAmount     float64    `json:"payment_amount"`
+	FeeRate           float64    `json:"fee_rate"`
+	FeeAmount         float64    `json:"fee_amount"`
+	TaxRate           float64    `json:"tax_rate"`
+	TaxAmount         float64    `json:"tax_amount"`
+	TotalAmount       float64    `json:"total_amount"`
+	DueDate           timex.Date `json:"due_date"`
+	Status            string     `json:"status"`
+	CreatedAt         time.Time  `json:"created_at"`
+	UpdatedAt         time.Time  `json:"updated_at"`
 }
 
 func NewInvoice(
