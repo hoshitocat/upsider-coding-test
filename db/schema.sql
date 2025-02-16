@@ -11,39 +11,50 @@ CREATE TABLE companies (
 
 CREATE TABLE users (
     id VARCHAR(255) PRIMARY KEY,
-    company_id VARCHAR(255) NOT NULL REFERENCES companies(id),
+    company_id VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE business_partners (
-    id VARCHAR(255) PRIMARY KEY,
-    company_id VARCHAR(255) NOT NULL REFERENCES companies(id),
-    partner_company_id VARCHAR(255) NOT NULL REFERENCES companies(id),
-    partner_bank_account_id VARCHAR(255) NOT NULL REFERENCES bank_accounts(id),
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE (partner_company_id, company_id)
+    FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE bank_accounts (
     id VARCHAR(255) PRIMARY KEY,
-    company_id VARCHAR(255) NOT NULL REFERENCES companies(id),
+    company_id VARCHAR(255) NOT NULL,
     bank_name VARCHAR(255) NOT NULL,
     branch_name VARCHAR(255) NOT NULL,
     account_number VARCHAR(20) NOT NULL,
     account_name VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE business_partners (
+    id VARCHAR(255) PRIMARY KEY,
+    company_id VARCHAR(255) NOT NULL,
+    partner_company_id VARCHAR(255) NOT NULL,
+    partner_bank_account_id VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE (partner_company_id, company_id),
+    FOREIGN KEY (partner_company_id) REFERENCES companies(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (partner_bank_account_id) REFERENCES bank_accounts(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE invoice_statuses (
+    id VARCHAR(255) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE invoices (
     id VARCHAR(255) PRIMARY KEY,
-    company_id VARCHAR(255) NOT NULL REFERENCES companies(id),
-    business_partner_id VARCHAR(255) NOT NULL REFERENCES business_partners(id),
+    company_id VARCHAR(255) NOT NULL,
+    business_partner_id VARCHAR(255) NOT NULL,
     issue_date DATE NOT NULL,
     payment_amount DECIMAL(10,2) NOT NULL,
     fee_rate DECIMAL(4,2) NOT NULL DEFAULT 4.00,
@@ -52,15 +63,11 @@ CREATE TABLE invoices (
     tax_amount DECIMAL(10,2) NOT NULL,
     total_amount DECIMAL(10,2) NOT NULL,
     due_date DATE NOT NULL,
-    status_id VARCHAR(255) NOT NULL REFERENCES invoice_statuses(id),
+    status_id VARCHAR(255) NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_invoices_due_date (due_date)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE invoice_statuses (
-    id VARCHAR(255) PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    INDEX idx_invoices_due_date (due_date),
+    FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (business_partner_id) REFERENCES business_partners(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (status_id) REFERENCES invoice_statuses(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

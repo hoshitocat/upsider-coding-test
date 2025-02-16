@@ -11,6 +11,12 @@ services:
     - type: bind
       source: .
       target: /app
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=invoice
     command: ["go", "tool", "air", "-c", "./cmd/invoiceapi/.air.toml"]
   db:
     image: mysql:8.4.3

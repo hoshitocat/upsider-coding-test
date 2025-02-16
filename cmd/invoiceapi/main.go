@@ -8,7 +8,14 @@ import (
 	"os/signal"
 	"syscall"
 
+	adapter "github.com/hoshitocat/upsider-coding-test/cmd/invoiceapi/internal/adapter/http"
 	"github.com/hoshitocat/upsider-coding-test/cmd/invoiceapi/internal/config"
+	"github.com/hoshitocat/upsider-coding-test/cmd/invoiceapi/internal/domain"
+	"github.com/hoshitocat/upsider-coding-test/cmd/invoiceapi/internal/infra/db"
+	"github.com/hoshitocat/upsider-coding-test/cmd/invoiceapi/internal/usecase"
+	"github.com/jmoiron/sqlx"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
@@ -19,11 +26,23 @@ func main() {
 		log.Fatalf("Failed to create config: %v\n", err)
 	}
 
+	invoiceDB, err := sqlx.Open("mysql", cfg.Database.DSN())
+	if err != nil {
+		log.Fatalf("Failed to open db: %v\n", err)
+	}
+	defer invoiceDB.Close()
+	err = invoiceDB.PingContext(ctx)
+	if err != nil {
+		log.Fatalf("Failed to ping db: %v\n", err)
+	}
+
+	repos := domain.Repositories{}
+	db.InitRepositories(invoiceDB, &repos)
+	interactors := usecase.NewInteractors(repos)
+	handlers := adapter.NewHandlers(interactors)
+
 	mux := http.NewServeMux()
-	mux.HandleFunc("POST /api/invoices", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("請求書が作成されました"))
-	})
+	mux.HandleFunc("POST /api/invoices", handlers.InvoiceHandler.CreateInvoice)
 	mux.HandleFunc("GET /api/invoices", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("請求書一覧が取得されました"))

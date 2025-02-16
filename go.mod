@@ -2,10 +2,16 @@ module github.com/hoshitocat/upsider-coding-test
 
 go 1.24.0
 
-require github.com/caarlos0/env/v11 v11.3.1
+require (
+	github.com/caarlos0/env/v11 v11.3.1
+	github.com/go-sql-driver/mysql v1.8.1
+	github.com/jmoiron/sqlx v1.4.0
+	github.com/oklog/ulid/v2 v2.1.0
+)
 
 require (
 	dario.cat/mergo v1.0.1 // indirect
+	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/air-verse/air v1.61.7 // indirect
 	github.com/bep/godartsass v1.2.0 // indirect
 	github.com/bep/godartsass/v2 v2.1.0 // indirect
