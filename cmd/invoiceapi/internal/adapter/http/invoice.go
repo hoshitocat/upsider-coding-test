@@ -42,3 +42,44 @@ func (h *invoiceHandler) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 }
+
+func (h *invoiceHandler) ListInvoices(w http.ResponseWriter, r *http.Request) {
+	begin := r.URL.Query().Get("begin")
+	if begin == "" {
+		http.Error(w, "begin is required", http.StatusBadRequest)
+		return
+	}
+
+	beginDate, err := timex.NewDateFromString(begin)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	end := r.URL.Query().Get("end")
+	if end == "" {
+		http.Error(w, "end is required", http.StatusBadRequest)
+		return
+	}
+
+	endDate, err := timex.NewDateFromString(end)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	invoices, err := h.invoiceInteractor.ListInvoices(r.Context(), beginDate, endDate)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if len(invoices) == 0 {
+		invoices = []*domain.Invoice{}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string][]*domain.Invoice{"invoices": invoices})
+	// TODO: エラーハンドリング
+}
